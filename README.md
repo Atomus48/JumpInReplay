@@ -1,5 +1,5 @@
 # JumpInReplay
-JumpInReplay is a bakkesmod Plugin which allows you to open replays in a private match and take control of any car in any situtaion
+JumpInReplay is a bakkesmod Plugin which allows you to open replays in a private match and take control of any car in any situation
 
 **Basic Usage:**
 
@@ -10,8 +10,8 @@ tutorial:
 3. go to the plugins tab and select JumpInReplay
 4. press the apply standard bindings button
 5. press the convert Replay button
-6. wait untill the replay is finished
-7. a private match will automaticly be started and your team will be automaticly be selected
+6. wait until the replay is finished
+7. a private match will automatically be started and your team will be automatically be selected
 8. the JumpInReplay will start and replay the Replay
 9. you can now take control by pressing the button that is bound to JumpIn (Back/Select/V)
 10. by pressing pause (LeftStickPress/B) you can reset the shot and pause the replay
@@ -35,7 +35,7 @@ tutorial:
 **Command Reference:**
 
 - `jumpIn_convert`: converts replay you are currently watching into JumpInReplay.
-- `jumpIn_autoConvert`: automaticly converts replay when opening replay.
+- `jumpIn_autoConvert`: automatically converts replay when opening replay.
 - `jumpIn_replaySave`: saves the replay you are currently watching as a JumpInReplay.
 - `jumpIn_openReplay`: opens the most recently converted replay.
 - `jumpIn_bindings`: applys standard bindings for JumpInReplay.
