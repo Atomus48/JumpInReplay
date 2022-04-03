@@ -1,0 +1,51 @@
+﻿  JumpInReplay.cpp
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(224,22): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(458,93): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(459,87): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(514,86): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(516,17): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(691,33): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(692,46): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(703,33): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(703,28): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(703,23): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(703,18): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(733,33): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(733,28): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(733,23): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(733,18): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(740,20): warning C4244: "Initialisierung": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(741,21): warning C4244: "Initialisierung": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(742,16): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(743,31): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(743,26): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(755,33): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(755,28): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(755,23): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(758,33): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(758,19): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(772,33): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(772,24): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(777,30): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(777,19): warning C4309: "Argument": Verkürzung eines konstanten Wertes
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(788,22): warning C4244: "Initialisierung": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(789,21): warning C4244: "Initialisierung": Konvertierung von "_Ty" in "float", möglicher Datenverlust
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(790,16): warning C4244: "Initialisierung": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(798,22): warning C4244: "Initialisierung": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(799,21): warning C4244: "Initialisierung": Konvertierung von "_Ty" in "float", möglicher Datenverlust
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\JumpInReplay\JumpInReplay.cpp(800,16): warning C4244: "Initialisierung": Konvertierung von "float" in "int", möglicher Datenverlust
+     Bibliothek "C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\x64\Release\JumpInReplay.lib" und Objekt "C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\x64\Release\JumpInReplay.exp" werden erstellt.
+  Code wird generiert.
+  33 of 894 functions ( 3.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    30 functions had inline decision re-evaluated but remain unchanged
+  Codegenerierung ist abgeschlossen.
+  JumpInReplay.vcxproj -> C:\Users\frede\Documents\Projekte\Programme\Bakkesmodplugin\JumpInReplay\x64\Release\JumpInReplay.dll
