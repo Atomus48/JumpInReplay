@@ -145,6 +145,7 @@ void JumpInReplay::SaveGameState(std::string eventName) {
 				gameWrapper->UnhookEvent("Function TAGame.Replay_TA.EventPlayedFrame");
 				this->Log("is unhooked");
 				cvarManager->getCvar("jumpIn_replaySave").setValue(false);
+				gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
 				if (cvarManager->getCvar("jumpIn_convert").getBoolValue() == true) {
 					cvarManager->executeCommand("jumpIn_privateMatch 1");
 				}
@@ -154,6 +155,10 @@ void JumpInReplay::SaveGameState(std::string eventName) {
 			gameWrapper->UnhookEvent("Function TAGame.Replay_TA.EventPlayedFrame");
 			this->Log("is unhooked");
 			cvarManager->getCvar("jumpIn_replaySave").setValue(false);
+			gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
+			if (cvarManager->getCvar("jumpIn_convert").getBoolValue() == true) {
+				cvarManager->getCvar("jumpIn_convert").setValue(false);
+			}
 		}
 	}
 
