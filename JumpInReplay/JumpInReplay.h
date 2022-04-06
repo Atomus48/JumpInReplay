@@ -79,7 +79,6 @@ public:
 	void SetGameInfo();
 
 	//Event Hooks
-	void TestHook(std::string eventName);
 	void SaveGameState(std::string eventName);
 	void ControllGamePerTick(std::string eventName);
 	void JoinedFreeplay(std::string eventName);
@@ -89,8 +88,6 @@ public:
 	bool hasReplaySaved = false;
 	void OneTimeSaves();
 	int LobbySize = 0;
-	float ReplayHZ = 30;
-	int ReplayFactor = 4;
 	std::vector<std::string> playerNames;
 	std::vector<int> CarLayouts;
 	//int Gamemode = 0;
@@ -104,13 +101,13 @@ public:
 
 	//replay variables
 	int Frame = 0;
+	int ReplayTick = 0;
 	int ReplaySize = 0;
 	int SavedFrames = 0;
 	int TempBlueScore = 0;
 	int TempOrangeScore = 0;
 
 	int Tick = 8;
-	int FrameTick = 0;
 	int CarAmount = 0;
 	int CountdownTime = 0;
 	int TimeRemaining = 0;

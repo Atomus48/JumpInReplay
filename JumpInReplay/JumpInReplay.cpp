@@ -45,7 +45,7 @@ void JumpInReplay::CvarRegister() {
 	cvarManager->registerCvar("jumpIn_autoConvert", "0", "automaticly converts replays into JumpInReplays", true, true, 0.0f, true, 1.0f, true).addOnValueChanged(std::bind(&JumpInReplay::AutoConvertCvar, this, std::placeholders::_1, std::placeholders::_2));
 	
 	cvarManager->registerCvar("jumpIn_pause", "0", "pauses replay", true, true, 0.0f, true, 1.0f, false);
-	cvarManager->registerCvar("jumpIn_resolution", "5", "resolution how the replay is converted", true, true, 1.0f, true, 20.0f, true);
+	cvarManager->registerCvar("jumpIn_resolution", "5", "resolution how the replay is converted", true, true, 1.1f, true, 20.0f, true);
 	cvarManager->registerCvar("jumpIn_limitedBoost", "1", "limits boost in JumpInReplays", true, true, 0.0f, true, 1.0f, true);
 	cvarManager->registerCvar("jumpIn_showHud", "1", "shows hud in JumpInReplays", true, true, 0.0f, true, 1.0f, true);
 	return;
@@ -76,6 +76,7 @@ void JumpInReplay::SaveReplay(std::string oldValue, CVarWrapper cvar) {
 				GameInfoPerFrame.clear();
 
 				//save new replay
+				ReplayTick = 0;
 				Frame = 0;
 				ReplayWrapper Replay = gameWrapper->GetGameEventAsReplay().GetReplay();
 				ReplayServerWrapper ServerReplay = gameWrapper->GetGameEventAsReplay();
@@ -85,18 +86,18 @@ void JumpInReplay::SaveReplay(std::string oldValue, CVarWrapper cvar) {
 				ServerReplay.SkipToFrame(Frame);
 
 
-				gameWrapper->HookEvent("Function TAGame.Replay_TA.EventPlayedFrame", std::bind(&JumpInReplay::SaveGameState, this, std::placeholders::_1));
+				gameWrapper->HookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep", std::bind(&JumpInReplay::SaveGameState, this, std::placeholders::_1));
 
 				this->Log("Amount of Frames in Replay " + std::to_string(ReplaySize));
 
 			}
 			else {
-				gameWrapper->UnhookEvent("Function TAGame.Replay_TA.EventPlayedFrame");
+				gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
 				gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
 			}
 		}
 		else {
-			gameWrapper->UnhookEvent("Function TAGame.Replay_TA.EventPlayedFrame");
+			gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
 			gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
 			Log("you must be in a replay to execute this command");
 			cvar.setValue(false);
@@ -139,26 +140,26 @@ void JumpInReplay::SaveGameState(std::string eventName) {
 				}
 			}
 			
-			Frame++;
+			ReplayTick++;
 
-			if (Frame >= ReplaySize) {
-				gameWrapper->UnhookEvent("Function TAGame.Replay_TA.EventPlayedFrame");
+			if (gameWrapper->GetGameEventAsReplay().GetCurrentReplayFrame() >= ReplaySize-1) {
+				gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
 				this->Log("is unhooked");
-				cvarManager->getCvar("jumpIn_replaySave").setValue(false);
 				gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
 				if (cvarManager->getCvar("jumpIn_convert").getBoolValue() == true) {
 					cvarManager->executeCommand("jumpIn_privateMatch 1");
 				}
+				cvarManager->getCvar("jumpIn_replaySave").setValue(false);
 			}
 		}
 		else {
-			gameWrapper->UnhookEvent("Function TAGame.Replay_TA.EventPlayedFrame");
+			gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
 			this->Log("is unhooked");
-			cvarManager->getCvar("jumpIn_replaySave").setValue(false);
-			gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
+			//gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
 			if (cvarManager->getCvar("jumpIn_convert").getBoolValue() == true) {
 				cvarManager->getCvar("jumpIn_convert").setValue(false);
 			}
+			cvarManager->getCvar("jumpIn_replaySave").setValue(false);
 		}
 	}
 
@@ -194,7 +195,7 @@ void JumpInReplay::SaveCar0() {
 	CarTemp1.boostAmount = 0.0f;
 	CarTemp1.isBoosting = false;
 	//CarTemp1.hasDodge = false;
-	CarTemp1.ballTouches = CarPositionsPerFrame.at(Frame - 1).ballTouches;
+	CarTemp1.ballTouches = CarPositionsPerFrame.at(ReplayTick-1).ballTouches;
 	CarPositionsPerFrame.push_back(CarTemp1);
 }
 
@@ -225,10 +226,7 @@ void JumpInReplay::OneTimeSaves() {
 		//general saves
 		LobbySize = Replay.GetCars().Count();
 		Arena = gameWrapper->GetCurrentMap();
-		ReplayHZ = Replay.GetReplay().GetRecordFPS();
-		ReplayFactor = 120 / ReplayHZ;
-		
-
+	
 		LinearColor orange = gameWrapper->GetGameEventAsReplay().GetTeams().Get(1).GetPrimaryColor();
 		LinearColor blue = gameWrapper->GetGameEventAsReplay().GetTeams().Get(0).GetPrimaryColor();
 
@@ -274,7 +272,7 @@ void JumpInReplay::SpawnBots(std::string oldValue, CVarWrapper cvar) {
 		if (gameWrapper->IsInGame() == true && hasReplaySaved == true) {
 			this->Log(std::to_string(LobbySize));
 			carit = 0;
-			SavedFrames = Frame;
+			SavedFrames = ReplayTick;
 			//set team player
 			gameWrapper->GetGameEventAsServer().GetPRIs().Get(0).ServerChangeTeam(StartTeams.at(carit));
 			//only Bots
@@ -332,7 +330,7 @@ void JumpInReplay::ControllGame(std::string oldValue, CVarWrapper cvar) {
 			//reset values
 			cvarManager->getCvar("jumpIn_jumpIn").setValue(0);
 			cvarManager->getCvar("jumpIn_pause").setValue(0);
-			Tick = 2 * ReplayFactor;
+			Tick = 0;
 			carit = 0;
 			CountdownTime = 0;
 			//isInOvertime = false;
@@ -377,80 +375,74 @@ void JumpInReplay::ControllGame(std::string oldValue, CVarWrapper cvar) {
 
 void JumpInReplay::ControllGamePerTick(std::string eventName) {
 	if (cvarManager->getCvar("jumpIn_controllGame").getBoolValue() == true && gameWrapper->IsInGame() == true) {
-		if (Tick < ReplayFactor * (SavedFrames - 2)) {
-			if (Tick % ReplayFactor == 0) {
-				FrameTick = Tick / ReplayFactor;
-
+		if (Tick < (SavedFrames - 8)) {
 				//cars
-				for (int i = 1;i < LobbySize + 1;i++) {
-					//car switching and setting cars
-					if (i - 1 == carit) {
-						SetCar0(i);
-						//jump In
-						if (cvarManager->getCvar("jumpIn_pause").getBoolValue() == false && cvarManager->getCvar("jumpIn_jumpIn").getBoolValue() == true && GameInfoPerFrame.at(FrameTick).Countdowntime == 0) {
-							gameWrapper->GetGameEventAsServer().GetCars().Get(0).ForceBoost(false);
-							gameWrapper->GetGameEventAsServer().GetCars().Get(0).SetbOverrideHandbrakeOn(false);
-							if (cvarManager->getCvar("jumpIn_limitedBoost").getBoolValue() == false) { gameWrapper->GetGameEventAsServer().GetCars().Get(0).GetBoostComponent().SetBoostAmount(1.0f); }
-						}
-						else {
-							SetCar(0, i - 1);
-						}
+			for (int i = 1;i < LobbySize + 1;i++) {
+				//car switching and setting cars
+				if (i - 1 == carit) {
+					SetCar0(i);
+					//jump In
+					if (cvarManager->getCvar("jumpIn_pause").getBoolValue() == false && cvarManager->getCvar("jumpIn_jumpIn").getBoolValue() == true && GameInfoPerFrame.at(Tick).Countdowntime == 0) {
+						gameWrapper->GetGameEventAsServer().GetCars().Get(0).ForceBoost(false);
+						gameWrapper->GetGameEventAsServer().GetCars().Get(0).SetbOverrideHandbrakeOn(false);
+						if (cvarManager->getCvar("jumpIn_limitedBoost").getBoolValue() == false) { gameWrapper->GetGameEventAsServer().GetCars().Get(0).GetBoostComponent().SetBoostAmount(1.0f); }
 					}
 					else {
-						SetCar(i, i - 1);
+						SetCar(0, i - 1);
 					}
 				}
-				//ball
-				//jumpin ball hit
-				if (gameWrapper->GetGameEventAsServer().GetPRIs().Get(0).GetBallTouches() > BallHits && cvarManager->getCvar("jumpIn_pause").getIntValue() != 1 && cvarManager->getCvar("jumpIn_jumpIn").getIntValue() == 1) {
-					setBally = false;
+				else {
+					SetCar(i, i - 1);
 				}
-				//jumpin ghosthit exemption
-				if (CarPositionsPerFrame.at(((FrameTick+2) * LobbySize) + carit).ballTouches != CarPositionsPerFrame.at(((FrameTick+1) * LobbySize) + carit).ballTouches && cvarManager->getCvar("jumpIn_jumpIn").getBoolValue() == true) {
-					setBally = false;
-				}
-				//score exemption
-				if (Score != gameWrapper->GetGameEventAsServer().GetTotalScore()) {
-					setBally = false;
-				}
-				if (GameInfoPerFrame.at(FrameTick).Countdowntime != CountdownTime) {
-					setBally = true;
-				}
-				//set ball
-				if (setBally == true) {
-					SetBall();
-				}
-
-				//score and time
-				SetGameInfo();
-
-				//variable incrementation
-				CountdownTime = GameInfoPerFrame.at(FrameTick).Countdowntime;
-				//isInOvertime = gameWrapper->GetGameEventAsServer().GetbOverTime();
-				Score = gameWrapper->GetGameEventAsServer().GetTotalScore();
-				//TimeRemaining = gameWrapper->GetGameEventAsServer().GetSecondsRemaining();
 			}
+			//ball
+			//jumpin ball hit
+			if (gameWrapper->GetGameEventAsServer().GetPRIs().Get(0).GetBallTouches() > BallHits && cvarManager->getCvar("jumpIn_pause").getBoolValue() == false && cvarManager->getCvar("jumpIn_jumpIn").getBoolValue() == true) {
+				setBally = false;
+			}
+			//jumpin ghosthit exemption
+			if (CarPositionsPerFrame.at(((Tick + 8) * LobbySize) + carit).ballTouches != CarPositionsPerFrame.at(((Tick + 7) * LobbySize) + carit).ballTouches && cvarManager->getCvar("jumpIn_jumpIn").getBoolValue() == true) {
+				setBally = false;
+			}
+			//score exemption
+			if (Score != gameWrapper->GetGameEventAsServer().GetTotalScore()) {
+				setBally = false;
+			}
+			if (GameInfoPerFrame.at(Tick).Countdowntime != CountdownTime) {
+				setBally = true;
+			}
+			//set ball
+			if (setBally == true) {
+				SetBall();
+			}
+
+			//score and time
+			SetGameInfo();
+
+			//variable incrementation
+			Score = gameWrapper->GetGameEventAsServer().GetTotalScore();
+			CountdownTime = GameInfoPerFrame.at(Tick).Countdowntime;
+
 			//pause
 			if (cvarManager->getCvar("jumpIn_pause").getBoolValue() == false) {
 				Tick++;
 			}
+			//reset pause
 			else {
 				if (cvarManager->getCvar("jumpIn_jumpIn").getBoolValue() == true) {
 					Tick = JumpInTick;
+					BallHits = gameWrapper->GetGameEventAsServer().GetPRIs().Get(0).GetBallTouches();
 					setBally = true;
-				}
-				while (Tick % ReplayFactor != 0)
-				{
-					Tick--;
+					gameWrapper->GetGameEventAsServer().ResetPickups();
 				}
 			}
 		}
 		else {
-			Tick = 2 * ReplayFactor;
+			Tick = 0;
 		}
 	}
 	else {
-		Tick = 2 * ReplayFactor;
+		Tick = 0;
 		gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
 		cvarManager->getCvar("jumpIn_controllGame").setValue(false);
 	}
@@ -460,20 +452,20 @@ void JumpInReplay::SetCar(int i, int it) {
 	CarWrapper Car = gameWrapper->GetGameEventAsServer().GetCars().Get(i);
 	if (i == 0) {
 		static ControllerInput input;
-		input.Throttle = (CarPositionsPerFrame.at((FrameTick * LobbySize) + it).throttle - 128.0) / 128.0;
-		input.Steer = (CarPositionsPerFrame.at((FrameTick * LobbySize) + it).steer - 128.0) / 128.0;
+		input.Throttle = (CarPositionsPerFrame.at((Tick * LobbySize) + it).throttle - 128.0) / 128.0;
+		input.Steer = (CarPositionsPerFrame.at((Tick * LobbySize) + it).steer - 128.0) / 128.0;
 	}
 	
-	Car.SetLocation(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).location);
-	Car.SetVelocity(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).velocitiy);
-	Car.SetRotation(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).rotation);
-	Car.SetAngularVelocity(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).angVelocity, false);
-	Car.SetbOverrideHandbrakeOn(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).handbrake);
-	Car.GetBoostComponent().SetBoostAmount(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).boostAmount);
-	Car.ForceBoost(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).isBoosting);
-	//Car.SetbCanJump(CarPositionsPerFrame.at((FrameTick * LobbySize) + it).hasDodge);
+	Car.SetLocation(CarPositionsPerFrame.at((Tick * LobbySize) + it).location);
+	Car.SetVelocity(CarPositionsPerFrame.at((Tick * LobbySize) + it).velocitiy);
+	Car.SetRotation(CarPositionsPerFrame.at((Tick * LobbySize) + it).rotation);
+	Car.SetAngularVelocity(CarPositionsPerFrame.at((Tick * LobbySize) + it).angVelocity, false);
+	Car.SetbOverrideHandbrakeOn(CarPositionsPerFrame.at((Tick * LobbySize) + it).handbrake);
+	Car.GetBoostComponent().SetBoostAmount(CarPositionsPerFrame.at((Tick * LobbySize) + it).boostAmount);
+	Car.ForceBoost(CarPositionsPerFrame.at((Tick * LobbySize) + it).isBoosting);
+	//Car.SetbCanJump(CarPositionsPerFrame.at((Tick * LobbySize) + it).hasDodge);
 
-	//Log(std::to_string(i)+": "+std::to_string(CarPositionsPerFrame.at(((FrameTick) * LobbySize) + it).location.X) + ", " + std::to_string(CarPositionsPerFrame.at(((FrameTick) * LobbySize) + it).location.Y) + ", " + std::to_string(CarPositionsPerFrame.at(((FrameTick) * LobbySize) + it).location.Z));
+	//Log(std::to_string(i)+": "+std::to_string(CarPositionsPerFrame.at(((Tick) * LobbySize) + it).location.X) + ", " + std::to_string(CarPositionsPerFrame.at(((Tick) * LobbySize) + it).location.Y) + ", " + std::to_string(CarPositionsPerFrame.at(((Tick) * LobbySize) + it).location.Z));
 }
 
 void JumpInReplay::SetCar0(int i) {
@@ -490,21 +482,21 @@ void JumpInReplay::SetCar0(int i) {
 
 void JumpInReplay::SetBall() {
 	BallWrapper Ball = gameWrapper->GetGameEventAsServer().GetBall();
-	Ball.SetLocation(BallPositionPerFrame.at(FrameTick).location);
-	Ball.SetVelocity(BallPositionPerFrame.at(FrameTick).velocitiy);
-	Ball.SetRotation(BallPositionPerFrame.at(FrameTick).rotation);
-	Ball.SetAngularVelocity(BallPositionPerFrame.at(FrameTick).angVelocity, false);
+	Ball.SetLocation(BallPositionPerFrame.at(Tick).location);
+	Ball.SetVelocity(BallPositionPerFrame.at(Tick).velocitiy);
+	Ball.SetRotation(BallPositionPerFrame.at(Tick).rotation);
+	Ball.SetAngularVelocity(BallPositionPerFrame.at(Tick).angVelocity, false);
 }
 
 void JumpInReplay::SetGameInfo() {
-	gameWrapper->GetGameEventAsServer().SetScoreAndTime(gameWrapper->GetGameEventAsServer().GetLocalPrimaryPlayer(), GameInfoPerFrame.at(FrameTick).BlueScore, GameInfoPerFrame.at(FrameTick).OrangeScore, GameInfoPerFrame.at(FrameTick).TimeRemaining, false, false);
+	gameWrapper->GetGameEventAsServer().SetScoreAndTime(gameWrapper->GetGameEventAsServer().GetLocalPrimaryPlayer(), GameInfoPerFrame.at(Tick).BlueScore, GameInfoPerFrame.at(Tick).OrangeScore, GameInfoPerFrame.at(Tick).TimeRemaining, false, false);
 
-	if (GameInfoPerFrame.at(FrameTick).Countdowntime != CountdownTime) {
-		if (GameInfoPerFrame.at(FrameTick).Countdowntime == 0) {
+	if (GameInfoPerFrame.at(Tick).Countdowntime != CountdownTime) {
+		if (GameInfoPerFrame.at(Tick).Countdowntime == 0) {
 			gameWrapper->GetGameEventAsServer().BroadcastGoMessage();
 		}
 		else {
-			gameWrapper->GetGameEventAsServer().BroadcastCountdownMessage(GameInfoPerFrame.at(FrameTick).Countdowntime);
+			gameWrapper->GetGameEventAsServer().BroadcastCountdownMessage(GameInfoPerFrame.at(Tick).Countdowntime);
 		}
 	}
 }
@@ -516,12 +508,12 @@ void JumpInReplay::Skip(std::string oldValue, CVarWrapper cvar) {
 	if (cvar.getIntValue() != 0) {
 		if (gameWrapper->IsInGame() == true && cvarManager->getCvar("jumpIn_controllGame").getBoolValue() == true) {
 			setBally = true;
-			if (Tick < 150 && Tick >= 2 * ReplayFactor) { Tick = (ReplayFactor * SavedFrames) + 120 * cvar.getFloatValue(); }
+			if (Tick < 150 && Tick >= 0) { Tick = (SavedFrames-8) + 120 * cvar.getFloatValue(); }
 			else {
 				Tick = Tick + (120 * cvar.getFloatValue());
 			}
-			if (Tick < 2 * ReplayFactor) { Tick = 2 * ReplayFactor; }
-			if (Tick > ReplayFactor * SavedFrames) { Tick = 2 * ReplayFactor; }
+			if (Tick < 0) { Tick = 0; }
+			if (Tick > SavedFrames-8) { Tick = 0; }
 		}
 		cvar.setValue(0);
 	}
@@ -564,6 +556,7 @@ void JumpInReplay::JumpIn(std::string oldValue, CVarWrapper cvar) {
 		BallHits = gameWrapper->GetGameEventAsServer().GetPRIs().Get(0).GetBallTouches();
 		if (cvar.getIntValue() == 1) {
 			cvarManager->executeCommand("jumpIn_pause 1");
+			gameWrapper->GetGameEventAsServer().ResetPickups();
 			setBally = true;
 			JumpInTick = Tick;
 			//set boost because airdribble plugin fuck my shit up like crazy and isn't even open source AAAAAAAHHHHH
@@ -609,9 +602,11 @@ void JumpInReplay::JoinedFreeplay(std::string eventName) {
 void JumpInReplay::AutoConvertCvar(std::string oldValue, CVarWrapper cvar) {
 	if (cvar.getBoolValue() == true) {
 		gameWrapper->HookEvent("Function TAGame.GameInfo_Replay_TA.InitGame", std::bind(&JumpInReplay::IsInReplay, this, std::placeholders::_1));
+		cvarManager->executeCommand("jumpIn_convert 1", false);
 	}
 	else {
 		gameWrapper->UnhookEvent("Function TAGame.GameInfo_Replay_TA.InitGame");
+		cvarManager->getCvar("jumpIn_convert").setValue(false);
 	}
 }
 
@@ -693,8 +688,8 @@ void JumpInReplay::DrawHud(CanvasWrapper canvas) {
 
 void JumpInReplay::DrawTime(CanvasWrapper canvas) {
 	//calculate minutes and seconds
-	MinutesAvailable = SavedFrames / (60 * ReplayHZ);
-	SecondsAvailable = (SavedFrames / ReplayHZ) - (MinutesAvailable * 60);
+	MinutesAvailable = SavedFrames / (60 * 120);
+	SecondsAvailable = (SavedFrames / 120) - (MinutesAvailable * 60);
 	MinutesDone = Tick / 7200;
 	SecondsDone = (Tick / 120) - (MinutesDone * 60);
 	//make seconds two didgets
@@ -742,7 +737,7 @@ void JumpInReplay::DrawTimeline(CanvasWrapper canvas) {
 
 void JumpInReplay::DrawTimelineSpent(CanvasWrapper canvas) {
 	int length = 0;
-	float ReplaySpent = FrameTick;
+	float ReplaySpent = Tick;
 	float ReplayLength = SavedFrames;
 	length = 1000 * (ReplaySpent / ReplayLength);
 	canvas.SetColor(0, 126, 255, 230);
