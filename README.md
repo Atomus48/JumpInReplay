@@ -3,7 +3,7 @@ JumpInReplay is a bakkesmod Plugin which allows you to open replays in a private
 
 **Basic Usage:**
 
-tutorial:
+tutorial: Coming Soon...
 
 1. open a replay
 2. open bakkesmod window (F2)
@@ -30,7 +30,7 @@ Standard bindings are:
 
 if you want to change the bindings you can do it in the bakkesmod bindings tab.
 
-tutorial:
+tutorial: Coming Soon...
 
 **Command Reference:**
 
@@ -47,6 +47,12 @@ tutorial:
 - `jumpIn_skip`: skips x second in the replay (negative x = skips back).
 - `jumpIn_switchPlayer`: changes player you are currently spectating.
 - `jumpIn_switchBack`: changes player back to the player you were previously spectating.
+
+**Currently not Supported:**
+
+- bumping or demoing of bots
+- real car layouts of bots
+- realistic boost pads on field
 
 **Contact:**
 
