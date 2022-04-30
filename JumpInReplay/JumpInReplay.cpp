@@ -707,7 +707,7 @@ void JumpInReplay::Bindings(std::string oldValue, CVarWrapper cvar) {
 	if (cvar.getBoolValue() == true) {
 		//controller
 		cvarManager->executeCommand("bind XboxTypeS_DPad_Right 'default_right; jumpIn_skip 10'");
-		cvarManager->executeCommand("bind XboxTypeS_DPad_Left 'default_left; jumpIn_skip -10'");
+		cvarManager->executeCommand("bind XboxTypeS_DPad_Left 'default_left; jumpIn_skip -5'");
 		cvarManager->executeCommand("bind XboxTypeS_DPad_Up 'default_up; jumpIn_switchPlayer 1'");
 		cvarManager->executeCommand("bind XboxTypeS_DPad_Down 'default_down; jumpIn_switchBack 1'");
 		cvarManager->executeCommand("bind XboxTypeS_Back 'toggle jumpIn_jumpIn 1 0'");
