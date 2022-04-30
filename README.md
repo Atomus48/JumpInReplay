@@ -22,11 +22,11 @@ tutorial: Coming Soon...
 
 Standard bindings are:
 - `DPadRight/RightArrow`: skips 10s forward in Replay.
-- `DPadLeft/LeftArrow`: skips 10s back in Replay.
+- `DPadLeft/LeftArrow`: skips 5s back in Replay.
 - `DPadUp/UpArrow`: selects spectated Player.
 - `DPadDown/DownArrow`: selects previously spectated Player.
 - `LeftStickPress/B`: pauses Replay (also resets shot).
-- `Back/Select/V`: toggles JumpInMode (you have to unpause).
+- `Back/Select/V`: toggles JumpInMode (you have to unpause or execute an input like custom training).
 
 if you want to change the bindings you can do it in the bakkesmod bindings tab.
 
@@ -41,6 +41,7 @@ tutorial: Coming Soon...
 - `jumpIn_bindings`: applys standard bindings for JumpInReplay.
 - `jumpIn_resolution`: changes the resolution the replay is converted with (higher = faster but worse quality).
 - `jumpIn_limitedBoost`: sets boost to be limited or unlimited in the JumpInReplay.
+- `jumpIn_inputToUnpause`: allows you to unpause the JumpInReplay by throttle or boost when JumpedIn.
 - `jumpIn_showHud`: enables the HUD in JumpInReplays.
 - `jumpIn_jumpIn`: lets you take control of the player you are currently spectating in a JumpInReplay.
 - `jumpIn_pause`: pauses the replay (also resets the shot if you are JumpedIn).
@@ -50,6 +51,8 @@ tutorial: Coming Soon...
 
 **Currently not Supported:**
 
+- games where players leave (results in ghost cars)
+- rumble, dropshot and most limited time gamemodes
 - bumping or demoing of bots
 - real car layouts of bots
 - realistic boost pads on field
