@@ -1,13 +1,23 @@
-// pch.h: Dies ist eine vorkompilierte Headerdatei.
-// Die unten aufgeführten Dateien werden nur einmal kompiliert, um die Buildleistung für zukünftige Builds zu verbessern.
-// Dies wirkt sich auch auf die IntelliSense-Leistung aus, Codevervollständigung und viele Features zum Durchsuchen von Code eingeschlossen.
-// Die hier aufgeführten Dateien werden jedoch ALLE neu kompiliert, wenn mindestens eine davon zwischen den Builds aktualisiert wird.
-// Fügen Sie hier keine Dateien hinzu, die häufig aktualisiert werden sollen, da sich so der Leistungsvorteil ins Gegenteil verkehrt.
+#pragma once
 
-#ifndef PCH_H
-#define PCH_H
+#define WIN32_LEAN_AND_MEAN
+#define _CRT_SECURE_NO_WARNINGS
+#include "bakkesmod/plugin/bakkesmodplugin.h"
 
-// Fügen Sie hier Header hinzu, die vorkompiliert werden sollen.
-#include "framework.h"
+#include <string>
+#include <vector>
+#include <functional>
+#include <memory>
 
-#endif //PCH_H
+#include "imgui/imgui.h"
+
+#include "fmt/core.h"
+#include "fmt/ranges.h"
+
+extern std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
+
+template<typename S, typename... Args>
+void LOG(const S& format_str, Args&&... args)
+{
+	_globalCvarManager->log(fmt::format(format_str, args...));
+}

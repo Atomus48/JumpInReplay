@@ -1,11 +1,15 @@
 #pragma once
-#include "bakkesmod/plugin/bakkesmodplugin.h"
+
 #pragma comment( lib, "pluginsdk.lib")
 
+#include "bakkesmod/plugin/bakkesmodplugin.h"
+#include "bakkesmod/plugin/pluginwindow.h"
+#include "bakkesmod/plugin/PluginSettingsWindow.h"
+
+#include "version.h"
+
 #include <vector>
-
-
-constexpr float MAX_DODGE_TIME = 1.2f;
+constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 struct CarPosition
 {
@@ -21,6 +25,9 @@ struct CarPosition
 	//float lastJumped;
 	//bool hasDodge;
 	int ballTouches;
+	int team;
+	bool isActive;
+	//std::string name;
 };
 
 struct BallPosition
@@ -41,7 +48,7 @@ struct GameInfo
 	//bool IsInCountdown;
 };
 
-class JumpInReplay: public BakkesMod::Plugin::BakkesModPlugin
+class JumpInReplay: public BakkesMod::Plugin::BakkesModPlugin/*, public BakkesMod::Plugin::PluginSettingsWindow*//*, public BakkesMod::Plugin::PluginWindow*/
 {
 public:
 	virtual void onLoad();
@@ -70,9 +77,9 @@ public:
 	void SaveCar(int i);
 	void SaveCar0();
 	void SaveBall();
+	void SaveBall0();
 	void SaveGameInfo();
 	void SpawnOneBot(int i);
-	void SetTeams();
 	void SetCar(int i, int it);
 	void SetCar0(int i);
 	void SetBall();
@@ -90,17 +97,21 @@ public:
 	int LobbySize = 0;
 	std::vector<std::string> playerNames;
 	std::vector<int> CarLayouts;
-	//int Gamemode = 0;
+	int Gamemode = 0;
+	std::string GamemodeStr;
 	std::string Arena;
-	std::vector<unsigned long> StartCars;
+	std::string AdditionalMutators;
+	//std::vector<unsigned long> StartCars;
 	std::vector<int> StartTeams;
 	//Car designs
 	std::vector<LinearColor> primeColor;
 	//std::vector<LinearColor> secondColor;
 	//int hasColorsNormalized;
 
+	//int newCars = 0;
+
 	//replay variables
-	int Frame = 0;
+	//int Frame = 0;
 	int ReplayTick = 0;
 	int ReplaySize = 0;
 	int SavedFrames = 0;
@@ -121,6 +132,7 @@ public:
 	std::vector<CarPosition> CarPositionsPerFrame;
 	std::vector<BallPosition> BallPositionPerFrame;
 	std::vector<GameInfo> GameInfoPerFrame;
+	//std::vector<int> LobbySizePerFrame;
 
 	//replay saves
 	std::vector<int> BlueScoredFrame;
@@ -135,6 +147,9 @@ public:
 
 
 	//Overlay
+	int resX = 1920;
+	int resY = 1080;
+
 	void DrawHud(CanvasWrapper canvas);
 	void DrawTime(CanvasWrapper canvas);
 	void DrawPause(CanvasWrapper canvas);
@@ -144,6 +159,12 @@ public:
 	void DrawJumpIn(CanvasWrapper canvas);
 	void DrawOrangeScored(CanvasWrapper canvas);
 	void DrawBlueScored(CanvasWrapper canvas);
+
+	int ConvertToScreenSizeX(int HDpixel);
+	int ConvertToScreenSizeY(int HDpixel);
+	float ConvertTextSizeX(float Text);
+	float ConvertTextSizeY(float Text);
+
 
 	//Overlay variables
 	int MinutesAvailable = 0;
