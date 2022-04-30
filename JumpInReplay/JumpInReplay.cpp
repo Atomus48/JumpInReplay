@@ -714,7 +714,7 @@ void JumpInReplay::Bindings(std::string oldValue, CVarWrapper cvar) {
 		cvarManager->executeCommand("bind XboxTypeS_LeftThumbStick 'toggle jumpIn_pause 1 0'");
 		//keyboard
 		cvarManager->executeCommand("bind Right 'jumpIn_skip 10'");
-		cvarManager->executeCommand("bind Left 'jumpIn_skip -10'");
+		cvarManager->executeCommand("bind Left 'jumpIn_skip -5'");
 		cvarManager->executeCommand("bind Up 'jumpIn_switchPlayer 1'");
 		cvarManager->executeCommand("bind Down 'jumpIn_switchBack 1'");
 		cvarManager->executeCommand("bind V 'toggle jumpIn_jumpIn 1 0'");
