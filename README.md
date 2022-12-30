@@ -47,6 +47,7 @@ if you want to change the bindings you can do it in the bakkesmod bindings tab.
 - `jumpIn_convertKeyframes`: only converts Keyframes of the replay that are previously put in.
 - `jumpIn_timeBeforKeyframe`: time that is converted before a Keyframe in seconds.
 - `jumpIn_timeAfterKeyframe`: time that is converted after a Keyframe in seconds.
+- `jumpIn_disableGoal`: EXPERIMENTAL disabling might cause game to crash.
 
 **Currently not Supported:**
 
