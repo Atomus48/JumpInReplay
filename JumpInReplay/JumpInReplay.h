@@ -90,14 +90,21 @@ public:
 	void ControllGamePerTick(std::string eventName);
 	void JoinedFreeplay(std::string eventName);
 	void IsInReplay(std::string eventName);
+	void GoalReplayStart(std::string eventName);
+	void GoalReplayEnd(std::string eventName);
 
 	//One Time Saves
 	bool hasReplaySaved = false;
 	void OneTimeSaves();
+	void KeyframeSaves();
+	std::vector<int> Keyframes;
+	std::vector<int> KeyframesInConvert;
+	std::string temppath = gameWrapper->GetBakkesModPath().string() + "/data/jumpInReplay/current.txt";
 	int LobbySize = 0;
 	std::vector<std::string> playerNames;
 	std::vector<int> CarLayouts;
 	int Gamemode = 0;
+	int ReplayFPS = 30;
 	std::string GamemodeStr;
 	std::string Arena;
 	std::string AdditionalMutators;
@@ -111,6 +118,8 @@ public:
 	//int newCars = 0;
 
 	//replay variables
+	int curKeyframe = 0;
+	int curKeyframeInConvert = 0;
 	//int Frame = 0;
 	int ReplayTick = 0;
 	int ReplaySize = 0;
@@ -127,6 +136,7 @@ public:
 	int Score = 0;
 	//bool isInOvertime = false;
 	bool setBally = true;
+	bool isInGoalReplay = false;
 
 	//saves per frame
 	std::vector<CarPosition> CarPositionsPerFrame;
@@ -159,6 +169,7 @@ public:
 	void DrawJumpIn(CanvasWrapper canvas);
 	void DrawOrangeScored(CanvasWrapper canvas);
 	void DrawBlueScored(CanvasWrapper canvas);
+	void DrawKeyframe(CanvasWrapper canvas);
 
 	int ConvertToScreenSizeX(int HDpixel);
 	int ConvertToScreenSizeY(int HDpixel);
