@@ -3,8 +3,6 @@ JumpInReplay is a bakkesmod Plugin which allows you to open replays in a private
 
 **Basic Usage:**
 
-tutorial: Coming Soon...
-
 1. open a replay
 2. open bakkesmod window (F2)
 3. go to the plugins tab and select JumpInReplay
@@ -30,8 +28,6 @@ Standard bindings are:
 
 if you want to change the bindings you can do it in the bakkesmod bindings tab.
 
-tutorial: Coming Soon...
-
 **Command Reference:**
 
 - `jumpIn_convert`: converts replay you are currently watching into JumpInReplay.
@@ -48,6 +44,9 @@ tutorial: Coming Soon...
 - `jumpIn_skip`: skips x second in the replay (negative x = skips back).
 - `jumpIn_switchPlayer`: changes player you are currently spectating.
 - `jumpIn_switchBack`: changes player back to the player you were previously spectating.
+- `jumpIn_convertKeyframes`: only converts Keyframes of the replay that are previously put in.
+- `jumpIn_timeBeforKeyframe`: time that is converted before a Keyframe in seconds.
+- `jumpIn_timeAfterKeyframe`: time that is converted after a Keyframe in seconds.
 
 **Currently not Supported:**
 
