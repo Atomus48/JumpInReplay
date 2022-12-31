@@ -1,0 +1,32 @@
+JumpInReplay
+0|Convert Replay|jumpIn_convert 1
+0|Open Saved Replay|jumpIn_openReplay 1
+9|do not change Teams, restart Match or go to Spectate
+8|
+9|Settings:
+8|
+1|Automaticlly Convert Replays|jumpIn_autoConvert
+4|Conversion Resolution|jumpIn_resolution|0.01|20
+1|Limited Boost in Replay|jumpIn_limitedBoost
+1|Normal Training Start|jumpIn_inputToUnpause
+1|Show HUD in JumpInReplay|jumpIn_showHud
+9|
+1|Just Convert Keyframes|jumpIn_convertKeyframes
+4|Time that is Converted Before a Keyframe|jumpIn_timeBeforKeyframe|0.0|120
+4|Time that is Converted After a Keyframe|jumpIn_timeAfterKeyframe|0.0|60
+8|
+9|Bindings:
+8|
+0|apply Standard Bindings|jumpIn_bindings 1
+9|
+9|Standard bindings are:
+9|DPadRight/RightArrow: skips 10s forward in Replay
+9|DPadLeft/LeftArrow: skips 5s back in Replay
+9|DPadUp/UpArrow: selects spectated Player
+9|DPadDown/DownArrow: selects previously spectated Player
+9|LeftStickPress/B: pauses Replay (also resets shot)
+9|Back/Select/V: toggles JumpInMode (you have to unpause)
+9|
+9|if you want to change the bindings you can do it in the bakkesmod bindings tab
+8|
+9|plugin made by: Atomus#5492
