@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "JumpInReplay.h"
+#include "JumpInFile.h"
+#include "compatibility.h"
 #include <vector>
 #include <chrono>
 #include <thread>
@@ -9,15 +11,20 @@
 #include <regex>
 #include <sstream>
 #include <map>
-#include "JumpInFile.h"
 
 
 BAKKESMOD_PLUGIN(JumpInReplay, "JumpInReplay is a bakkesmod Plugin which allows you to open replays in a private match and take control of any car in any situation", plugin_version, PLUGINTYPE_FREEPLAY)
 
+std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
+
 void JumpInReplay::onLoad() {
+	//Compatibility compatibility;
+	_globalCvarManager = cvarManager;
 	this->Log("JumpInReplay is a bakkesmod Plugin which allows you to record your replays and open them in Freeplay so you can take controll over a car at any time");
 	this->CvarRegister();
 	this->AutoConvert();
+	
+
 	//rendering
 	gameWrapper->RegisterDrawable(bind(&JumpInReplay::DrawHud, this, std::placeholders::_1));
 
@@ -47,6 +54,8 @@ void JumpInReplay::CvarRegister() {
 	cvarManager->registerCvar("jumpIn_openReplay", "0", "opens saved JumpInReplay", true, true, 0.0f, true, 1.0f, false).addOnValueChanged(std::bind(&JumpInReplay::OpenReplay, this, std::placeholders::_1, std::placeholders::_2));
 	cvarManager->registerCvar("jumpIn_autoConvert", "0", "automaticly converts replays into JumpInReplays", true, true, 0.0f, true, 1.0f, true).addOnValueChanged(std::bind(&JumpInReplay::AutoConvertCvar, this, std::placeholders::_1, std::placeholders::_2));
 
+	cvarManager->registerCvar("jumpIn_doNotAskForDisableOfIncompatiblePlugins", "0", "asks for disableing plugins by JumpInReplay", true, true, 0.0f, true, 1.0f, true);
+	
 	cvarManager->registerCvar("jumpIn_pause", "0", "pauses replay", true, true, 0.0f, true, 1.0f, false);
 	cvarManager->registerCvar("jumpIn_inputToUnpause", "1", "unpauses replay when jumpedIn via controller input", true, true, 0.0f, true, 1.0f, true);
 	cvarManager->registerCvar("jumpIn_resolution", "3", "resolution how the replay is converted (lower better Resolution->slower Conversion)", true, true, 0.01f, true, 20.0f, true);
@@ -63,50 +72,53 @@ void JumpInReplay::CvarRegister() {
 //FUNCTION//
 //--------//
 
-
 //Save Replay As JumpInReplay
 
 void JumpInReplay::SaveReplay(std::string oldValue, CVarWrapper cvar) {
 	if (cvar.getBoolValue() == true) {
 		if (gameWrapper->IsInReplay() == true) {
 			if (cvar.getIntValue() == 1) {
+				//check for plugins that are incompatible with jumpInReplay
+				//Compatibility compatibility;
+				if (compatibility.CheckForIncompatibility()) {
 
-				ReplayWrapper Replay = gameWrapper->GetGameEventAsReplay().GetReplay();
-				ReplayServerWrapper ServerReplay = gameWrapper->GetGameEventAsReplay();
-				ReplaySize = Replay.GetNumFrames();
-				
-				//get rid of old replay
-				playerNames.clear();
-				CarLayouts.clear();
-				//StartCars.clear();
-				StartTeams.clear();
-				CarPositionsPerFrame.clear();
-				BallPositionPerFrame.clear();
-				primeColor.clear();
-				//secondColor.clear();
-				BlueScoredFrame.clear();
-				OrangeScoredFrame.clear();
-				GameInfoPerFrame.clear();
-				Gamemode = 0;
-				GamemodeStr = "";
-				AdditionalMutators = "";
-				
-				//save new replay
-				ReplayTick = 0;
-				//Frame = 0;
+					ReplayWrapper Replay = gameWrapper->GetGameEventAsReplay().GetReplay();
+					ReplayServerWrapper ServerReplay = gameWrapper->GetGameEventAsReplay();
+					ReplaySize = Replay.GetNumFrames();
 
-				this->OneTimeSaves();
-				gameWrapper->GetGameEventAsReplay().SkipToFrame(0);
+					//get rid of old replay
+					playerNames.clear();
+					CarLayouts.clear();
+					//StartCars.clear();
+					StartTeams.clear();
+					CarPositionsPerFrame.clear();
+					BallPositionPerFrame.clear();
+					primeColor.clear();
+					//secondColor.clear();
+					BlueScoredFrame.clear();
+					OrangeScoredFrame.clear();
+					GameInfoPerFrame.clear();
+					Gamemode = 0;
+					GamemodeStr = "";
+					AdditionalMutators = "";
 
-				gameWrapper->HookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep", std::bind(&JumpInReplay::SaveGameState, this, std::placeholders::_1));
+					//save new replay
+					ReplayTick = 0;
+					//Frame = 0;
 
-				this->Log("Amount of Frames in Replay " + std::to_string(ReplaySize));
+					this->OneTimeSaves();
+					gameWrapper->GetGameEventAsReplay().SkipToFrame(0);
 
+					gameWrapper->HookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep", std::bind(&JumpInReplay::SaveGameState, this, std::placeholders::_1));
+
+					this->Log("Amount of Frames in Replay " + std::to_string(ReplaySize));
+				}
 			}
 			else {
 				gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
 				gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
 			}
+				
 		}
 		else {
 			gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
@@ -195,7 +207,7 @@ void JumpInReplay::SaveGameState(std::string eventName) {
 
 			ReplayTick++;
 
-			if (gameWrapper->GetGameEventAsReplay().GetCurrentReplayFrame() >= ReplaySize - 1 || curKeyframe >= Keyframes.size()) {
+			if (gameWrapper->GetGameEventAsReplay().GetCurrentReplayFrame() >= ReplaySize - 1 || (curKeyframe >= Keyframes.size()&& Keyframes.size() > 0)) {
 				gameWrapper->UnhookEvent("Function TAGame.EngineShare_TA.EventPostPhysicsStep");
 				this->Log("is unhooked");
 				gameWrapper->GetGameEventAsReplay().SetGameSpeed(1.0f);
@@ -424,9 +436,10 @@ void JumpInReplay::StartPrivateMatch(std::string oldValue, CVarWrapper cvar) {
 			//opens private match
 			//gameWrapper->GetGameEventAsReplay().GetReplayDirector().SaveUserKeyframe();
 
-			cvarManager->executeCommand("unreal_command disconnect");
-			gameWrapper->HookEvent("Function TAGame.GFxData_MainMenu_TA.MainMenuAdded", std::bind(&JumpInReplay::JoinPrivateMatch, this, std::placeholders::_1));
-			
+			//cvarManager->executeCommand("unreal_command disconnect");
+			//gameWrapper->HookEvent("Function TAGame.GFxData_MainMenu_TA.MainMenuAdded", std::bind(&JumpInReplay::JoinPrivateMatch, this, std::placeholders::_1));
+			cvarManager->executeCommand("unreal_command 'open " + Arena + "?Game=TAGame.GameInfo_" + GamemodeStr + "_TA?Offline?Gametags=noDemolish,UnlimitedTime" + AdditionalMutators + "'");
+
 			//give saved positions back per frame
 			//std::string positionstxtpath = gameWrapper->GetBakkesModPath().string() + "/data/jumpInReplay/positions.txt";
 			//std::ofstream positionstxtout(positionstxtpath);

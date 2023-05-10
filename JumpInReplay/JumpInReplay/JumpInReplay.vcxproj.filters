@@ -75,6 +75,9 @@
     <ClCompile Include="JumpInFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="compatibility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JumpInReplay.h">
@@ -126,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JumpInFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="compatibility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

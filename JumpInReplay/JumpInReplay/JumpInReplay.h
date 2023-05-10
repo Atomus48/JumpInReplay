@@ -7,6 +7,7 @@
 #include "bakkesmod/plugin/PluginSettingsWindow.h"
 
 #include "version.h"
+#include "compatibility.h"
 
 #include <vector>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
@@ -55,11 +56,14 @@ struct TimeNotConverted
 	int end;
 };
 
-class JumpInReplay: public BakkesMod::Plugin::BakkesModPlugin/*, public BakkesMod::Plugin::PluginSettingsWindow*//*, public BakkesMod::Plugin::PluginWindow*/
+class JumpInReplay: public BakkesMod::Plugin::BakkesModPlugin, /*public BakkesMod::Plugin::PluginSettingsWindow,*/ public BakkesMod::Plugin::PluginWindow
 {
 public:
 	virtual void onLoad();
 	virtual void onUnload();
+
+	//std::shared_ptr<GameWrapper> _globalGameWrapper = gameWrapper;
+	Compatibility compatibility;
 
 	void CvarRegister();
 
@@ -201,5 +205,22 @@ private:
 
 	void Log(std::string msg);
 
+	// Inherited via PluginSettingsWindow
+	//void RenderSettings() override;
+	//std::string GetPluginName() override;
+
+	// Inherited via PluginWindow
+	bool isWindowOpen_ = false;
+	bool isMinimized_ = false;
+	std::string menuTitle_ = "JumpInReplay";
+
+	virtual void Render() override;
+	virtual std::string GetMenuName() override;
+	virtual std::string GetMenuTitle() override;
+	virtual void SetImGuiContext(uintptr_t ctx) override;
+	virtual bool ShouldBlockInput() override;
+	virtual bool IsActiveOverlay() override;
+	virtual void OnOpen() override;
+	virtual void OnClose() override;
 };
 
