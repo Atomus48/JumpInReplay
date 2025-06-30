@@ -23,16 +23,11 @@ struct CarPosition
 	bool handbrake;
 	float boostAmount;
 	bool isBoosting;
-	bool backCam;
-	bool ballCam;
-	float camPitch;
-	float camYaw;
 	//float lastJumped;
 	//bool hasDodge;
 	int ballTouches;
 	int team;
 	bool isActive;
-	bool isInKickoff;
 	//std::string name;
 };
 
@@ -85,9 +80,6 @@ public:
 	void OpenReplay(std::string oldValue, CVarWrapper cvar);
 	void Bindings(std::string oldValue, CVarWrapper cvar);
 	void AutoConvertCvar(std::string oldValue, CVarWrapper cvar);
-
-	//test function
-	void Test(std::string oldValue, CVarWrapper cvar);
 
 	//cvar variablas
 
@@ -163,21 +155,11 @@ public:
 	bool setBally = true;
 	bool isInGoalReplay = false;
 
-	std::vector<CarPosition> LastCarPosition;
-	std::vector<bool> LastCarPositionSaved;
-	BallPosition LastBallPosition;
-	bool LastBallPositionSaved;
-	
-
 	//saves per frame
 	std::vector<CarPosition> CarPositionsPerFrame;
 	std::vector<BallPosition> BallPositionPerFrame;
 	std::vector<GameInfo> GameInfoPerFrame;
 	//std::vector<int> LobbySizePerFrame;
-	BallPosition prevBallTemp;
-	bool prevBallTempBool;
-	int missedFrames;
-	int savedBallFrames;
 
 	//replay saves
 	std::vector<int> BlueScoredFrame;
