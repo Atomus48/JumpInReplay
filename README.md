@@ -1,20 +1,22 @@
 # JumpInReplay
 JumpInReplay is a bakkesmod Plugin which allows you to open replays in a private match and take control of any car in any situation
 
-**Basic Usage:**
-
-1. open a replay
-2. open bakkesmod window (F2)
-3. go to the plugins tab and select JumpInReplay
-4. press the apply standard bindings button
-5. press the convert Replay button
-6. wait until the replay is finished
-7. a private match will automatically be started and your team will be automatically be selected
-8. the JumpInReplay will start and replay the Replay
-9. you can now take control by pressing the button that is bound to JumpIn (Back/Select/V)
-10. by pressing pause (LeftStickPress/B) you can reset the shot and pause the replay
-11. you can close the replay anytime by just leaving the game
-12. you can reopen the previously saved replay by pressing the open Replay button in the bakkesmod window (F2)
+## Installation from git (bakkesmod plugin page is not updated yet)
+1. Download the plugin's .zip file from the repo.
+2. Locate the .dll file within the downloaded JumpInReplay\plugins folder.
+3. Copy the .dll file to your BakkesMod plugins folder: 
+   - C:\Users\<username>\AppData\Roaming\bakkesmod\bakkesmod\plugins
+4. Locate the settings file within the downloaded JumpInReplay\plugins\settings folder.
+5. Copy the settings file to your BakkesMod settings folder:
+   - C:\Users\<username>\AppData\Roaming\bakkesmod\bakkesmod\plugins\settings
+6. Enable Automatic Startup by modifying your BakkesMod configuration file:
+   - Open the plugins.cfg file located at: C:\Users\<username>\AppData\Roaming\bakkesmod\bakkesmod\cfg
+   - Add the following line to the end of the file:
+     ```
+     plugin load jumpinreplay
+     ```
+   - Save and close the plugins.cfg file.
+7. Start Rocket League and enjoy!
 
 **Bindings:**
 
